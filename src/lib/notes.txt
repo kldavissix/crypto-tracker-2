@@ -1,0 +1,9 @@
+
+
+
+
+Header
+	Move "logo" to header
+	Remove Light/Dark
+	Remove "Home"
+	Add Fake "Breadcrumbs"
