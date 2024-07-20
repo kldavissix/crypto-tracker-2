@@ -1,7 +1,6 @@
 "use client"
 
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
@@ -36,12 +35,10 @@ interface CoinsTableProps {
 }
 
 export default function CoinsTable({ data, userId }: CoinsTableProps) {
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [tableData, setTableData] = useState(data)
+  const [coinFilter, setCoinFilter] = useState("")
   const [favoritesOnly, setFavoritesOnly] = useState(false)
-
   const { favorites, setFavorites } = useFavorites()
-
   const [sorting, setSorting] = useState<SortingState>([
     {
       id: "market_cap_rank",
@@ -79,19 +76,13 @@ export default function CoinsTable({ data, userId }: CoinsTableProps) {
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
     onPaginationChange: setPagination,
     autoResetPageIndex: false,
     state: {
-      columnFilters: favoritesOnly
-        ? [
-            {
-              id: "id",
-              value: null,
-            },
-          ]
-        : [],
-      // columnFilters,
+      columnFilters: [
+        ...(favoritesOnly ? [{ id: "id", value: null }] : []),
+        ...(coinFilter ? [{ id: "searchColumn", value: coinFilter }] : []),
+      ],
       sorting,
       pagination,
       columnVisibility,
@@ -129,25 +120,14 @@ export default function CoinsTable({ data, userId }: CoinsTableProps) {
             type="text"
             placeholder="Search"
             className="w-full rounded border py-2 pl-2 pr-14"
-            value={
-              (table.getColumn("searchColumn")?.getFilterValue() as string) ??
-              ""
-            }
+            value={coinFilter}
             onChange={(event) => {
-              table
-                .getColumn("searchColumn")
-                ?.setFilterValue(event.target.value)
+              setCoinFilter(event.target.value)
               setPagination({ ...pagination, pageIndex: 0 })
             }}
           />
           <span className="absolute inset-y-0 right-1 flex items-center pl-3">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() =>
-                table.getColumn("searchColumn")?.setFilterValue("")
-              }
-            >
+            <Button variant="ghost" size="sm" onClick={() => setCoinFilter("")}>
               <LuX />
             </Button>
           </span>
