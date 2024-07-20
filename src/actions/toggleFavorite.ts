@@ -4,12 +4,16 @@ import prisma from "@/lib/db"
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
 import { redirect } from "next/navigation"
 
-export async function ToggleFavorite(coinId: string, userId: string | null) {
+export async function ToggleFavorite(coinId: unknown, userId: unknown | null) {
   const { getUser } = getKindeServerSession()
 
   const user = await getUser()
-  if (!user || user.id !== userId) {
+  if (!user || user?.id !== userId) {
     redirect("/api/auth/login")
+  }
+
+  if (coinId === undefined || !(typeof coinId === "string")) {
+    throw new Error("coinId must be a string")
   }
 
   try {
