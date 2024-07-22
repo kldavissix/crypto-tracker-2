@@ -4,7 +4,7 @@ import "./globals.css"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 
-import { ThemeProvider } from "@/components/ThemeProvider"
+import { ThemeProvider } from "@/context/ThemeProvider"
 import Container from "@/components/Container"
 import { FavoritesProvider } from "@/context/FavoritesContext"
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
